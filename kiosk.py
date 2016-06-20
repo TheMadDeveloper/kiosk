@@ -32,22 +32,25 @@ root = ET.fromstring(response)
 is_playing = root.attrib['size'] != '0'
 
 if is_playing:
-    for video in root.findall("Video"):
-        title = video.attrib["title"]
-        year = video.attrib["year"]
-        duration = float(video.attrib["duration"])
-        current = float(video.attrib["viewOffset"])
+	for video in root.findall("Video"):
+		title = video.attrib["title"]
+		year = video.attrib["year"]
+		duration = float(video.attrib["duration"])
+		current = float(video.attrib["viewOffset"])
+		remaining_minutes = (duration-current)/60000
 
-        print "Now Playing: %s (%s)"%(title,year)
-        print "Currently at %.1f mins of %.1f"%(current/60000, duration/60000)
+		print "Now Playing: %s (%s)"%(title,year)
+		print "Currently at %.1f mins of %.1f"%(current/60000, duration/60000)
 
-        print current
-        # Post data to LaMetric
-    	lametric = lametric.Setup()
-    	lametric.addTextFrame('a1944',"On Now")
-    	lametric.addTextFrame('',"%s (%s)"%(title,year))
-    	lametric.addGoalFrame('',0,current/60000, duration/60000," Mins")
-    	lametric.addTextFrame('',"Ends in %i minutes"%((duration-current)/60000))
-    	lametric.push(app_id, access_token)
-        
-        break
+		# Post data to LaMetric
+		lametric = lametric.Setup("https://10.0.1.100:4343")
+		lametric.addTextFrame('a1944',"On Now")
+		lametric.addTextFrame('',"%s (%s)"%(title,year))
+		lametric.addGoalFrame('',0,current/60000, duration/60000," Mins")
+		remaining_msg = "%i minute%s left"%(remaining_minutes, "s" if remaining_minutes > 1 else "")
+		if remaining_minutes == 0:
+			remaining_msg = "The End"
+		lametric.addTextFrame('',remaining_msg)
+		lametric.push(app_id, access_token)
+		
+		break
