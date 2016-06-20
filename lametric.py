@@ -28,12 +28,11 @@ class Setup(object):
 
     def addGoalFrame(self, icon, start, current, end, unit):
         frame = {}
-        print current
         frame['index'] = self.index
         frame['icon']  = icon
         frame['goalData'] = {}
         frame['goalData']['start'] = start
-        frame['goalData']['current'] = current
+        frame['goalData']['current'] = current 
         frame['goalData']['end'] = end
         frame['goalData']['unit'] = unit
         self.data['frames'].append(frame)
@@ -47,10 +46,11 @@ class Setup(object):
         self.index += 1
     
     def push(self, app_id, access_token):
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        opener = urllib2.build_opener(urllib2.HTTPSHandler(context=ctx));
+        #ctx = ssl.create_default_context()
+        #ctx.check_hostname = False
+        #ctx.verify_mode = ssl.CERT_NONE
+        #opener = urllib2.build_opener(urllib2.HTTPSHandler(context=ctx));
+        opener = urllib2.build_opener();
         headers = { 'Accept': 'application/json', 'Cache-Control': 'no-cache', 'X-Access-Token': access_token };
         request = urllib2.Request(_PUSH_URL + app_id, json.dumps(self.data,ensure_ascii=False), headers);
 
