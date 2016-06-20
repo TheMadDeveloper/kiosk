@@ -1,6 +1,7 @@
 # PythonAPI LaMetric REST data access
 # coding=utf-8
 
+from sys import version_info
 import json
 import urllib2
 import ssl
@@ -9,6 +10,8 @@ import ssl
 
 _HOST       = "https://developer.lametric.com"
 _PUSH_PATH   = "/api/v1/dev/widget/update/com.lametric."
+
+print version_info
 
 class Setup(object):
 
@@ -47,7 +50,7 @@ class Setup(object):
         self.index += 1
     
     def push(self, app_id, access_token, local_address=False):
-        if (ssl and ssl.create_default_context):
+        if version_info.micro < 9:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
